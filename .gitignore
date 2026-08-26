@@ -1,0 +1,3 @@
+daemon/build/
+*.plasmoid
+.DS_Store

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+  <kcfgfile name=""/>
+
+  <group name="General">
+    <entry name="ctlPath" type="String">
+      <label>Path to librepods-ctl</label>
+      <default></default>
+    </entry>
+    <entry name="hideWhenDisconnected" type="Bool">
+      <label>Hide the widget when no AirPods are connected</label>
+      <default>false</default>
+    </entry>
+    <entry name="statusPollMs" type="Int">
+      <label>How often to re-read the librepods status file (ms)</label>
+      <default>800</default>
+      <min>250</min>
+      <max>5000</max>
+    </entry>
+  </group>
+
+  <group name="Appearance">
+    <entry name="displayMode" type="Int">
+      <label>Panel display style</label>
+      <default>0</default>
+      <min>0</min>
+      <max>2</max>
+    </entry>
+    <entry name="showStatusDot" type="Bool">
+      <label>Show connection dot</label>
+      <default>true</default>
+    </entry>
+    <entry name="showIcon" type="Bool">
+      <label>Show AirPods silhouette in the panel</label>
+      <default>true</default>
+    </entry>
+    <entry name="showName" type="Bool">
+      <label>Show device name in the panel</label>
+      <default>false</default>
+    </entry>
+    <entry name="showLeft" type="Bool">
+      <label>Show left pod battery</label>
+      <default>true</default>
+    </entry>
+    <entry name="showRight" type="Bool">
+      <label>Show right pod battery</label>
+      <default>true</default>
+    </entry>
+    <entry name="showCase" type="Bool">
+      <label>Show case battery</label>
+      <default>true</default>
+    </entry>
+    <entry name="showHeadset" type="Bool">
+      <label>Show headset battery (AirPods Max)</label>
+      <default>true</default>
+    </entry>
+    <entry name="showMode" type="Bool">
+      <label>Show listening mode in the panel</label>
+      <default>true</default>
+    </entry>
+    <entry name="showMiniBars" type="Bool">
+      <label>Show inline progress bars</label>
+      <default>false</default>
+    </entry>
+    <entry name="showSeparators" type="Bool">
+      <label>Show dot separators between panel metrics</label>
+      <default>false</default>
+    </entry>
+    <entry name="metricOrder" type="String">
+      <label>Comma-separated panel metric order</label>
+      <default>status,icon,name,left,right,case,headset,mode</default>
+    </entry>
+    <entry name="batteryWarnLow" type="Bool">
+      <label>Tint battery red when low</label>
+      <default>true</default>
+    </entry>
+    <entry name="batteryLowPercent" type="Int">
+      <label>Battery percent at or below which the value turns red</label>
+      <default>20</default>
+      <min>5</min>
+      <max>60</max>
+    </entry>
+  </group>
+
+  <group name="Theming">
+    <entry name="monochrome" type="Bool">
+      <label>Monochrome theme</label>
+      <default>false</default>
+    </entry>
+    <entry name="monoAccent" type="Int">
+      <label>Monochrome accent</label>
+      <default>0</default>
+      <min>0</min>
+      <max>6</max>
+    </entry>
+  </group>
+
+  <group name="Behavior">
+    <entry name="middleClickAction" type="String">
+      <label>Middle click action</label>
+      <default>cycle</default>
+    </entry>
+  </group>
+</kcfg>

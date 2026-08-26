@@ -1,0 +1,9 @@
+singleton Theme 1.0 Theme.qml
+AnimeChip 1.0 AnimeChip.qml
+CompactRepresentation 1.0 CompactRepresentation.qml
+FullRepresentation 1.0 FullRepresentation.qml
+GaugeRing 1.0 GaugeRing.qml
+MetricIcon 1.0 MetricIcon.qml
+AirPodsIcon 1.0 AirPodsIcon.qml
+PodsClient 1.0 PodsClient.qml
+RogSwitch 1.0 RogSwitch.qml

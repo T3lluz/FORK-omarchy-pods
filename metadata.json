@@ -1,0 +1,20 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "fredde",
+                "Email": "fstalsberg@gmail.com"
+            }
+        ],
+        "Category": "Multimedia",
+        "Description": "AirPods battery, listening mode, Conversation Awareness, One-Bud ANC and ear detection on the KDE Plasma panel.",
+        "Icon": "audio-headphones",
+        "Id": "org.fredde.airpods",
+        "License": "MIT",
+        "Name": "AirPods",
+        "Version": "1.0.0",
+        "Website": "https://github.com/T3lluz/FORK-omarchy-pods"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}
