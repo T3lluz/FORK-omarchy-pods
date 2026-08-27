@@ -1,9 +1,16 @@
 // Run with: deno run --allow-read tests/model.test.js
+//        or: node tests/model.test.js
 // Model.js has no exports, so it is evaluated here rather than imported.
 
-const source = Deno.readTextFileSync(new URL("../contents/ui/Model.js", import.meta.url))
+let source
+if (typeof Deno !== "undefined") {
+  source = Deno.readTextFileSync(new URL("../contents/ui/Model.js", import.meta.url))
+} else {
+  const { readFileSync } = await import("node:fs")
+  source = readFileSync(new URL("../contents/ui/Model.js", import.meta.url), "utf8")
+}
 const Model = new Function(
-  source + "; return { parseStatus, podFrom, defaultPod, noiseModeVerb, earDetectionVerb, levelFraction, levelText, podMeta, elideError, availableModes, NOISE_OFF, NOISE_ANC, NOISE_TRANSPARENCY, NOISE_ADAPTIVE, LEVEL_UNKNOWN, NOISE_UNKNOWN, EAR_PAUSE_ONE_OUT, LID_UNKNOWN, MAX_ERROR_CHARS }"
+  source + "; return { parseStatus, podFrom, defaultPod, noiseModeVerb, earDetectionVerb, levelFraction, levelText, podMeta, elideError, availableModes, noiseModeName, noiseModeShortName, adaptiveLevelHint, NOISE_OFF, NOISE_ANC, NOISE_TRANSPARENCY, NOISE_ADAPTIVE, LEVEL_UNKNOWN, NOISE_UNKNOWN, EAR_PAUSE_ONE_OUT, LID_UNKNOWN, MAX_ERROR_CHARS }"
 )()
 
 let failures = 0
@@ -137,8 +144,16 @@ check("a Pro 3 loses Off and keeps Adaptive", modesFor(good),
 check("a Max 2 gets all four", modesFor(max2),
   [Model.NOISE_OFF, Model.NOISE_TRANSPARENCY, Model.NOISE_ADAPTIVE, Model.NOISE_ANC])
 
+check("short name for ANC fits the panel", Model.noiseModeShortName(Model.NOISE_ANC), "ANC")
+check("full name for ANC stays long in the popup", Model.noiseModeName(Model.NOISE_ANC), "Noise Cancellation")
+check("adaptive 0 is transparency", Model.adaptiveLevelHint(0), "Transparency")
+check("adaptive 100 is noise cancellation", Model.adaptiveLevelHint(100), "Noise Cancellation")
+check("adaptive 50 is a percent", Model.adaptiveLevelHint(50), "50%")
+
 if (failures > 0) {
   console.log(failures + " failed")
-  Deno.exit(1)
+  if (typeof Deno !== "undefined")
+    Deno.exit(1)
+  process.exit(1)
 }
 console.log("model.test.js: all checks passed")

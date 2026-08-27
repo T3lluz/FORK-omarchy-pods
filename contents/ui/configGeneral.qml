@@ -34,36 +34,36 @@ KCM.SimpleKCM {
     ]
 
     readonly property var metricCatalog: [
-        { id: "status",  label: i18n("Status"),   shortLabel: i18n("Status"), kind: "status",  tint: "#34d399" },
-        { id: "icon",    label: i18n("Icon"),     shortLabel: i18n("Icon"),   kind: "buds",    tint: "#7d93f0" },
-        { id: "name",    label: i18n("Name"),     shortLabel: i18n("Name"),   kind: "text",    tint: "#56b6f0" },
-        { id: "left",    label: i18n("Left pod"), shortLabel: i18n("Left"),   kind: "battery", tint: "#60a5fa" },
-        { id: "right",   label: i18n("Right pod"),shortLabel: i18n("Right"),  kind: "battery", tint: "#a78bfa" },
-        { id: "case",    label: i18n("Case"),     shortLabel: i18n("Case"),   kind: "case",    tint: "#34d399" },
-        { id: "headset", label: i18n("Headset"),  shortLabel: i18n("Max"),    kind: "headset", tint: "#22d3ee" },
-        { id: "mode",    label: i18n("Mode"),     shortLabel: i18n("Mode"),   kind: "noise",   tint: "#7d93f0" }
+        { id: "status",  label: i18n("Status dot"),     shortLabel: i18n("Status"), kind: "status",   tint: "#34d399" },
+        { id: "icon",    label: i18n("Pair silhouette"),shortLabel: i18n("Pair"),   kind: "buds",     tint: "#7d93f0" },
+        { id: "name",    label: i18n("Device name"),    shortLabel: i18n("Name"),   kind: "text",     tint: "#56b6f0" },
+        { id: "left",    label: i18n("Left AirPod"),    shortLabel: i18n("L"),      kind: "leftpod",  tint: "#60a5fa" },
+        { id: "right",   label: i18n("Right AirPod"),   shortLabel: i18n("R"),      kind: "rightpod", tint: "#a78bfa" },
+        { id: "case",    label: i18n("Case"),           shortLabel: i18n("Case"),   kind: "case",     tint: "#34d399" },
+        { id: "headset", label: i18n("Headphones (Max)"),shortLabel: i18n("Max"),   kind: "headset",  tint: "#22d3ee" },
+        { id: "mode",    label: i18n("Listening mode"), shortLabel: i18n("Mode"),   kind: "noise",    tint: "#7d93f0" }
     ]
 
-    readonly property var dataCatalog: [
-        { id: "icon",    label: i18n("Silhouette"), kind: "buds",    tint: "#7d93f0" },
-        { id: "left",    label: i18n("Left pod"),   kind: "battery", tint: "#60a5fa" },
-        { id: "right",   label: i18n("Right pod"),  kind: "battery", tint: "#a78bfa" },
-        { id: "case",    label: i18n("Case"),       kind: "case",    tint: "#34d399" },
-        { id: "headset", label: i18n("Headset"),    kind: "headset", tint: "#22d3ee" },
-        { id: "mode",    label: i18n("Listening"),  kind: "noise",   tint: "#7d93f0" }
+    readonly property var panelCatalog: [
+        { id: "status",  label: i18n("Status dot"),      kind: "status",   tint: "#34d399" },
+        { id: "icon",    label: i18n("Pair silhouette"), kind: "buds",     tint: "#7d93f0" },
+        { id: "name",    label: i18n("Device name"),     kind: "text",     tint: "#56b6f0" },
+        { id: "left",    label: i18n("Left AirPod"),     kind: "leftpod",  tint: "#60a5fa" },
+        { id: "right",   label: i18n("Right AirPod"),    kind: "rightpod", tint: "#a78bfa" },
+        { id: "case",    label: i18n("Case"),            kind: "case",     tint: "#34d399" },
+        { id: "headset", label: i18n("Headphones (Max)"),kind: "headset",  tint: "#22d3ee" },
+        { id: "mode",    label: i18n("Listening mode"),  kind: "noise",    tint: "#7d93f0" }
     ]
 
     readonly property var extraCatalog: [
-        { id: "separators", label: i18n("Separators"),          kind: "dots", tint: "#9aa7bd" },
-        { id: "bars",       label: i18n("Mini bars"),           kind: "bars", tint: "#7d93f0" },
-        { id: "hide",       label: i18n("Hide when idle"),      kind: "hide", tint: "#f2596a" },
-        { id: "lowWarn",    label: i18n("Warn when low"),       kind: "battery", tint: "#f4b73d" }
+        { id: "separators", label: i18n("Dot separators"),      kind: "dots",     tint: "#9aa7bd" },
+        { id: "bars",       label: i18n("Battery mini-bars"),   kind: "bars",     tint: "#7d93f0" },
+        { id: "hide",       label: i18n("Hide when disconnected"), kind: "hide", tint: "#f2596a" },
+        { id: "lowWarn",    label: i18n("Tint when battery is low"), kind: "battery", tint: "#f4b73d" }
     ]
 
     readonly property color muted: "#9aa7bd"
     readonly property color accent: "#7d93f0"
-    readonly property color teal: "#2dd4bf"
-    readonly property color amber: "#f4b73d"
 
     function alpha(c, a) {
         return Qt.rgba(c.r, c.g, c.b, a)
@@ -330,7 +330,28 @@ KCM.SimpleKCM {
             }
             QQC2.Label {
                 Layout.fillWidth: true
-                text: i18n("The widget never talks to Bluetooth. It watches $XDG_STATE_HOME/librepods/status.json and sends verbs through librepods-ctl. Build the daemon from daemon/ with install.sh.")
+                text: i18n("The widget reads $XDG_STATE_HOME/librepods/status.json and sends commands through librepods-ctl. Build the daemon with install.sh.")
+                color: Kirigami.Theme.disabledTextColor
+                font: Kirigami.Theme.smallFont
+                wrapMode: Text.WordWrap
+            }
+
+            FieldLabel { text: i18n("Status refresh interval") }
+            QQC2.SpinBox {
+                id: pollSpin
+                Layout.fillWidth: true
+                from: 250
+                to: 5000
+                stepSize: 50
+                textFromValue: function(value, locale) { return i18n("%1 ms", value) }
+                valueFromText: function(text, locale) {
+                    var n = parseInt(text.replace(/[^0-9]/g, ""), 10)
+                    return isNaN(n) ? root.cfg_statusPollMs : n
+                }
+            }
+            QQC2.Label {
+                Layout.fillWidth: true
+                text: i18n("How often to re-read the daemon status file. 800 ms is enough for battery.")
                 color: Kirigami.Theme.disabledTextColor
                 font: Kirigami.Theme.smallFont
                 wrapMode: Text.WordWrap
@@ -447,85 +468,35 @@ KCM.SimpleKCM {
                     onPicked: root.cfg_displayMode = 2
                 }
             }
+
+            QQC2.Label {
+                Layout.fillWidth: true
+                text: i18n("Battery items always keep their earbud or case graphic so left and right stay distinct. This style only changes percentages, mini-bars, and the listening-mode label.")
+                color: Kirigami.Theme.disabledTextColor
+                font: Kirigami.Theme.smallFont
+                wrapMode: Text.WordWrap
+            }
         }
 
         SectionCard {
-            title: i18n("PANEL ITEMS")
+            title: i18n("PANEL")
 
-            Rectangle {
+            QQC2.Label {
                 Layout.fillWidth: true
-                implicitHeight: identityInner.implicitHeight + Kirigami.Units.largeSpacing * 2
-                radius: Kirigami.Units.smallSpacing * 1.4
-                color: {
-                    var _ = root.showStamp
-                    return (root.cfg_showStatusDot || root.cfg_showName)
-                        ? root.alpha("#7d93f0", 0.12)
-                        : root.alpha(Kirigami.Theme.textColor, 0.03)
-                }
-                border.width: 1
-                border.color: {
-                    var _ = root.showStamp
-                    return (root.cfg_showStatusDot || root.cfg_showName)
-                        ? root.alpha("#7d93f0", 0.4)
-                        : root.alpha(Kirigami.Theme.textColor, 0.10)
-                }
-
-                ColumnLayout {
-                    id: identityInner
-                    x: Kirigami.Units.smallSpacing * 1.5
-                    y: Kirigami.Units.smallSpacing * 1.5
-                    width: parent.width - Kirigami.Units.smallSpacing * 3
-                    spacing: Kirigami.Units.smallSpacing
-
-                    RowLayout {
-                        spacing: Kirigami.Units.smallSpacing
-                        MetricIcon {
-                            Layout.preferredWidth: Kirigami.Units.iconSizes.smallMedium
-                            Layout.preferredHeight: Kirigami.Units.iconSizes.smallMedium
-                            kind: "buds"
-                            color: "#7d93f0"
-                        }
-                        QQC2.Label {
-                            text: i18n("Identity")
-                            font.weight: Font.DemiBold
-                        }
-                        QQC2.Label {
-                            Layout.fillWidth: true
-                            text: i18n("Connection dot and device name")
-                            color: Kirigami.Theme.disabledTextColor
-                            font: Kirigami.Theme.smallFont
-                            elide: Text.ElideRight
-                        }
-                    }
-
-                    RowLayout {
-                        Layout.fillWidth: true
-                        spacing: Kirigami.Units.smallSpacing
-
-                        ToggleTile {
-                            mid: "status"
-                            label: i18n("Status")
-                            kind: "status"
-                            accent: "#34d399"
-                        }
-                        ToggleTile {
-                            mid: "name"
-                            label: i18n("Name")
-                            kind: "text"
-                            accent: "#56b6f0"
-                        }
-                    }
-                }
+                text: i18n("Left and right AirPods show as earbud graphics with the battery percent beside them — not the words Left or Right.")
+                color: Kirigami.Theme.disabledTextColor
+                font: Kirigami.Theme.smallFont
+                wrapMode: Text.WordWrap
             }
 
             GridLayout {
                 Layout.fillWidth: true
-                columns: 3
+                columns: 2
                 columnSpacing: Kirigami.Units.smallSpacing
                 rowSpacing: Kirigami.Units.smallSpacing
 
                 Repeater {
-                    model: root.dataCatalog
+                    model: root.panelCatalog
 
                     ToggleTile {
                         required property var modelData
@@ -539,7 +510,7 @@ KCM.SimpleKCM {
 
             FieldLabel {
                 Layout.topMargin: Kirigami.Units.smallSpacing
-                text: i18n("Order")
+                text: i18n("Order on the panel")
             }
 
             Flow {
@@ -623,7 +594,7 @@ KCM.SimpleKCM {
 
             QQC2.Label {
                 Layout.fillWidth: true
-                text: i18n("Tap a tile to show or hide it. Left, right and case hide themselves on an AirPods Max. Headset hides itself on buds. Missing readings hide themselves on the panel.")
+                text: i18n("Tap a tile to show or hide it. Left, right and case hide themselves on AirPods Max. Headphones hide themselves on buds. Missing readings hide themselves.")
                 color: Kirigami.Theme.disabledTextColor
                 font: Kirigami.Theme.smallFont
                 wrapMode: Text.WordWrap
@@ -666,41 +637,9 @@ KCM.SimpleKCM {
                     return isNaN(n) ? root.cfg_batteryLowPercent : n
                 }
             }
-        }
-
-        SectionCard {
-            title: i18n("POLLING")
-
-            RowLayout {
-                spacing: Kirigami.Units.smallSpacing
-                MetricIcon {
-                    Layout.preferredWidth: Kirigami.Units.iconSizes.small
-                    Layout.preferredHeight: Kirigami.Units.iconSizes.small
-                    kind: "refresh"
-                    color: root.teal
-                }
-                QQC2.Label {
-                    text: i18n("Status file interval")
-                    font.weight: Font.DemiBold
-                }
-            }
-
-            QQC2.SpinBox {
-                id: pollSpin
-                Layout.fillWidth: true
-                from: 250
-                to: 5000
-                stepSize: 50
-                textFromValue: function(value, locale) { return i18n("%1 ms", value) }
-                valueFromText: function(text, locale) {
-                    var n = parseInt(text.replace(/[^0-9]/g, ""), 10)
-                    return isNaN(n) ? root.cfg_statusPollMs : n
-                }
-            }
-
             QQC2.Label {
                 Layout.fillWidth: true
-                text: i18n("Plasma has no file watcher like Omarchy's FileView, so the widget re-reads the daemon status file on this interval. 800 ms is plenty for battery.")
+                text: i18n("Mini-bars draw a thin charge meter next to each percentage. Hide when disconnected removes the widget from the panel until AirPods reconnect.")
                 color: Kirigami.Theme.disabledTextColor
                 font: Kirigami.Theme.smallFont
                 wrapMode: Text.WordWrap

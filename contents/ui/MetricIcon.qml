@@ -13,6 +13,7 @@ import org.kde.kirigami as Kirigami
 //                  "chart" "network" "status" "text" "dots"
 //                  "bars" "both" "clock" "battery" "buds" "case"
 //                  "headset" "noise" "ear" "hide" "path"
+//                  "leftpod" "rightpod"
 Item {
     id: root
 
@@ -75,6 +76,8 @@ Item {
             case "clock":    drawClock(ctx);    break
             case "battery":  drawBattery(ctx);  break
             case "buds":     drawBuds(ctx);     break
+            case "leftpod":  drawLeftPod(ctx);  break
+            case "rightpod": drawRightPod(ctx); break
             case "case":     drawCase(ctx);     break
             case "headset":  drawHeadset(ctx);  break
             case "noise":    drawNoise(ctx);    break
@@ -381,6 +384,48 @@ Item {
             ctx.moveTo(16.8, 12.4)
             ctx.lineTo(16.8, 20.2)
             ctx.stroke()
+        }
+
+        function drawPod(ctx, cx) {
+            ctx.beginPath()
+            ctx.arc(cx, 8.2, 4.8, 0, Math.PI * 2)
+            ctx.stroke()
+            ctx.beginPath()
+            ctx.arc(cx, 8.2, 1.8, 0, Math.PI * 2)
+            ctx.fill()
+            ctx.lineWidth = 2.2
+            ctx.beginPath()
+            ctx.moveTo(cx, 12.8)
+            ctx.lineTo(cx, 20.4)
+            ctx.stroke()
+            ctx.lineWidth = root.strokeWidth
+            ctx.beginPath()
+            ctx.arc(cx, 20.5, 1.15, 0, Math.PI * 2)
+            ctx.fill()
+            if (root.charging)
+                drawMiniBolt(ctx)
+        }
+
+        function drawLeftPod(ctx) {
+            drawPod(ctx, 10.2)
+        }
+
+        function drawRightPod(ctx) {
+            drawPod(ctx, 13.8)
+        }
+
+        function drawMiniBolt(ctx) {
+            ctx.fillStyle = root.boltColor
+            ctx.beginPath()
+            ctx.moveTo(18.6, 3.2)
+            ctx.lineTo(15.2, 10.6)
+            ctx.lineTo(17.6, 10.6)
+            ctx.lineTo(16.4, 17.4)
+            ctx.lineTo(21.2, 8.8)
+            ctx.lineTo(18.4, 8.8)
+            ctx.closePath()
+            ctx.fill()
+            ctx.fillStyle = root.color
         }
 
         function drawCase(ctx) {
