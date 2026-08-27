@@ -64,7 +64,6 @@ KCM.SimpleKCM {
 
     readonly property color muted: "#9aa7bd"
     readonly property color accent: "#7d93f0"
-    readonly property color amber: "#f4b73d"
 
     function alpha(c, a) {
         return Qt.rgba(c.r, c.g, c.b, a)
