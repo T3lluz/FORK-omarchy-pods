@@ -49,13 +49,14 @@ PlasmaExtras.Representation {
         : i18n("librepods is not running")
 
     readonly property int popupContentHeight: body.implicitHeight + edgeMargin * 2
+    readonly property int popupMaxHeight: Kirigami.Units.gridUnit * 32
     Layout.preferredWidth: popupWidth
     Layout.minimumWidth: Kirigami.Units.gridUnit * 18
     Layout.maximumWidth: Kirigami.Units.gridUnit * 26
-    Layout.preferredHeight: popupContentHeight
-    Layout.minimumHeight: popupContentHeight
-    Layout.maximumHeight: popupContentHeight
-    implicitHeight: popupContentHeight
+    Layout.preferredHeight: Math.min(popupContentHeight, popupMaxHeight)
+    Layout.minimumHeight: Math.min(popupContentHeight, Kirigami.Units.gridUnit * 14)
+    Layout.maximumHeight: popupMaxHeight
+    implicitHeight: Math.min(popupContentHeight, popupMaxHeight)
     implicitWidth: popupWidth
 
     Component.onCompleted: pods.refresh()

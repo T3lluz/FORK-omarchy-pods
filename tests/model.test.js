@@ -6,9 +6,8 @@ let source
 if (typeof Deno !== "undefined") {
   source = Deno.readTextFileSync(new URL("../contents/ui/Model.js", import.meta.url))
 } else {
-  const fs = require("fs")
-  const path = require("path")
-  source = fs.readFileSync(path.join(__dirname, "../contents/ui/Model.js"), "utf8")
+  const { readFileSync } = await import("node:fs")
+  source = readFileSync(new URL("../contents/ui/Model.js", import.meta.url), "utf8")
 }
 const Model = new Function(
   source + "; return { parseStatus, podFrom, defaultPod, noiseModeVerb, earDetectionVerb, levelFraction, levelText, podMeta, elideError, availableModes, noiseModeName, noiseModeShortName, adaptiveLevelHint, NOISE_OFF, NOISE_ANC, NOISE_TRANSPARENCY, NOISE_ADAPTIVE, LEVEL_UNKNOWN, NOISE_UNKNOWN, EAR_PAUSE_ONE_OUT, LID_UNKNOWN, MAX_ERROR_CHARS }"

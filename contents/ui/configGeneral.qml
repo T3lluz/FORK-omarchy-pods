@@ -461,6 +461,14 @@ KCM.SimpleKCM {
                     selected: root.cfg_displayMode === 1
                     onPicked: root.cfg_displayMode = 1
                 }
+                ChoiceTile {
+                    label: i18n("Icons only")
+                    kind: "buds"
+                    selected: root.cfg_displayMode === 2
+                    onPicked: root.cfg_displayMode = 2
+                }
+            }
+
             QQC2.Label {
                 Layout.fillWidth: true
                 text: i18n("Battery items always keep their earbud or case graphic so left and right stay distinct. This style only changes percentages, mini-bars, and the listening-mode label.")
