@@ -14,22 +14,21 @@ Same daemon as [omarchy-pods](https://github.com/thisisgm/omarchy-pods). Same ca
 
 - Live connection status dot (pulses while the daemon is down)
 - AirPods silhouette that matches the hardware (buds, Pro, or Max)
-- Optional device name, left / right / case battery, or a single headset row on AirPods Max
-- Listening mode when the hardware has one
-- Configurable panel display. Pick any mix of those metrics, then reorder them. Icons + values, values only, or icons only, with optional separators and mini bars (same layout language as Power Deck and CasaOS Homelab)
+- Each AirPod as an earbud graphic with its battery percent beside it — not the words Left/Right
+- Case battery, or a single headphone row on AirPods Max
+- Listening mode when the hardware has one (ANC, Transparency, Adaptive, Off)
+- Configurable panel display. Pick any mix of those metrics, then reorder them. Icons + values, values only, or icons only, with optional separators and mini bars
 - Scales to whatever width you give the widget on the panel
 - Click to open the popup, middle-click to cycle listening mode (configurable), scroll the icon to cycle too
 
 **Popup (click to expand)**
 
-- Landscape dashboard with a full-height battery gauge rail on the left
-- Header, listening chips, and toggles stacked on the right
-- Listening mode chips for only the modes the daemon says this unit has
-- Adaptive noise slider while Adaptive is the active mode
+- Header with device name and refresh
+- Battery rows: earbud / case / headphone graphic, meter, percent, charging or in-ear hint
+- Listening mode list for only the modes the daemon says this unit has
+- Adaptive slider while Adaptive is the active mode: 0 = Transparency, 100 = full Noise Cancellation
 - Conversation Awareness and One-Bud ANC switches when the model supports them
 - Ear detection as three chips (pause when one is out, both are out, or never)
-
-The widget is dark, minimal, and data-rich by design. The same Power Deck aesthetic regardless of your active Plasma color scheme.
 
 ## Requirements
 
@@ -99,11 +98,10 @@ Right-click the widget → **Configure AirPods**. The page uses the same card / 
 
 | Section | What it controls |
 |---------|------------------|
-| **Connection** | Path to `librepods-ctl`. Leave empty to use PATH, then `~/.local/bin`. |
-| **Appearance** | Monochrome palette + accent swatch, icons+values / values / icons. |
-| **Panel items** | Tap tiles to show or hide status, silhouette, name, left, right, case, headset, and mode. Reorder chips with the arrows. |
-| **Options** | Dot separators, mini bars, hide when idle, low-battery tint. |
-| **Polling** | How often to re-read the daemon status file (250–5000 ms). |
+| **Connection** | Path to `librepods-ctl`, and how often to re-read the daemon status file. |
+| **Appearance** | Monochrome palette + accent swatch, icons+values / values / icons. Battery items always keep their earbud or case graphic. |
+| **Panel** | Tap tiles to show or hide status, pair silhouette, name, left AirPod, right AirPod, case, headphones, and mode. Reorder chips with the arrows. |
+| **Options** | Dot separators, battery mini-bars, hide when disconnected, low-battery tint. |
 | **Behavior** | Middle-click action (cycle listening mode / refresh / nothing). |
 
 Hide when idle is off by default. A widget you just added should stay on the panel until you hide it yourself.
@@ -141,6 +139,7 @@ kquitapp6 plasmashell && kstart plasmashell
 
 ```bash
 deno run --allow-read tests/model.test.js
+# or: node tests/model.test.js
 ```
 
 Project layout:
@@ -155,14 +154,13 @@ contents/
     Theme.qml                 # Centralized colors + metrics
     PodsClient.qml            # Status file + librepods-ctl
     CompactRepresentation.qml # Single-line panel view (reorderable metrics)
-    FullRepresentation.qml    # Rich popup
-    GaugeRing.qml             # Animated dial gauge
+    FullRepresentation.qml    # Popup: battery rows, listening modes, adaptive slider
     AnimeChip.qml             # Selectable pill chips
     RogSwitch.qml             # Animated toggle
-    MetricIcon.qml            # Canvas-drawn metric / action icons
+    MetricIcon.qml            # Canvas-drawn metric / action / earbud icons
     AirPodsIcon.qml           # Hardware silhouette
     Model.js                  # Status parse + verbs
-    configGeneral.qml         # KCM page (Power Deck card / tile layout)
+    configGeneral.qml         # KCM page
 daemon/                       # GPL-3.0 librepods fork (see daemon/UPSTREAM.md)
 tests/model.test.js
 ```

@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.plasmoid
+import org.kde.plasma.components as PC3
 import org.kde.kirigami as Kirigami
 import "Model.js" as Model
 
@@ -114,13 +115,17 @@ Item {
 
     function slotKind(id) {
         switch (id) {
-        case "left":
-        case "right":
-        case "headset": return "battery"
+        case "left": return "leftpod"
+        case "right": return "rightpod"
+        case "headset": return "headset"
         case "case": return "case"
         case "mode": return "noise"
         }
         return "buds"
+    }
+
+    function slotIsBattery(id) {
+        return id === "left" || id === "right" || id === "case" || id === "headset"
     }
 
     function slotText(id, stamp) {
@@ -129,6 +134,17 @@ Item {
         case "right": return Model.levelText(pods.rightPod.level)
         case "case": return Model.levelText(pods.caseBattery.level)
         case "headset": return Model.levelText(pods.headsetBattery.level)
+        case "mode": return Model.noiseModeShortName(pods.noiseMode)
+        }
+        return ""
+    }
+
+    function slotTip(id, stamp) {
+        switch (id) {
+        case "left": return i18n("Left AirPod %1", Model.levelText(pods.leftPod.level))
+        case "right": return i18n("Right AirPod %1", Model.levelText(pods.rightPod.level))
+        case "case": return i18n("Case %1", Model.levelText(pods.caseBattery.level))
+        case "headset": return i18n("Headphones %1", Model.levelText(pods.headsetBattery.level))
         case "mode": return Model.noiseModeName(pods.noiseMode)
         }
         return ""
@@ -284,8 +300,9 @@ Item {
                     accent: root.slotAccent(hSlot.modelData, root.dataStamp)
                     percent: root.slotPercent(hSlot.modelData, root.dataStamp)
                     charging: root.slotCharging(hSlot.modelData)
-                    showIcon: root.showIcons
+                    showIcon: root.showIcons || root.slotIsBattery(hSlot.modelData)
                     showValue: root.showValues
+                    tip: root.slotTip(hSlot.modelData, root.dataStamp)
                 }
             }
         }
@@ -368,8 +385,9 @@ Item {
                     valueText: root.slotText(vSlot.modelData, root.dataStamp)
                     accent: root.slotAccent(vSlot.modelData, root.dataStamp)
                     charging: root.slotCharging(vSlot.modelData)
-                    showIcon: root.showIcons
+                    showIcon: root.showIcons || root.slotIsBattery(vSlot.modelData)
                     showValue: root.showValues
+                    tip: root.slotTip(vSlot.modelData, root.dataStamp)
                 }
             }
         }
@@ -435,6 +453,7 @@ Item {
         property bool charging: false
         property bool showIcon: true
         property bool showValue: true
+        property string tip: ""
 
         Layout.alignment: Qt.AlignVCenter
         spacing: Kirigami.Units.smallSpacing
@@ -456,8 +475,14 @@ Item {
             color: Kirigami.Theme.textColor
             font.weight: Font.DemiBold
             font.pixelSize: Kirigami.Theme.smallFont.pixelSize
+            font.features: { "tnum": 1 }
             renderType: Text.NativeRendering
         }
+
+        HoverHandler { id: metricHover }
+        PC3.ToolTip.visible: metricHover.hovered && m.tip.length > 0
+        PC3.ToolTip.delay: 400
+        PC3.ToolTip.text: m.tip
 
         Rectangle {
             visible: Plasmoid.configuration.showMiniBars && m.percent >= 0
@@ -485,6 +510,7 @@ Item {
         property bool charging: false
         property bool showIcon: true
         property bool showValue: true
+        property string tip: ""
 
         Layout.alignment: Qt.AlignHCenter
         spacing: 0
@@ -506,7 +532,13 @@ Item {
             color: Kirigami.Theme.textColor
             font.weight: Font.DemiBold
             font.pixelSize: Kirigami.Theme.smallFont.pixelSize
+            font.features: { "tnum": 1 }
             renderType: Text.NativeRendering
         }
+
+        HoverHandler { id: vMetricHover }
+        PC3.ToolTip.visible: vMetricHover.hovered && vm.tip.length > 0
+        PC3.ToolTip.delay: 400
+        PC3.ToolTip.text: vm.tip
     }
 }

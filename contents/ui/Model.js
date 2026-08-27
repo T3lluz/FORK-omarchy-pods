@@ -180,6 +180,23 @@ function noiseModeName(mode) {
   return "Unknown"
 }
 
+// Short enough to sit next to a bud on the Plasma panel.
+function noiseModeShortName(mode) {
+  if (mode === NOISE_OFF) return "Off"
+  if (mode === NOISE_ANC) return "ANC"
+  if (mode === NOISE_TRANSPARENCY) return "Transparency"
+  if (mode === NOISE_ADAPTIVE) return "Adaptive"
+  return "Unknown"
+}
+
+// Adaptive 0 = let sound in (Transparency), 100 = full Noise Cancellation.
+function adaptiveLevelHint(level) {
+  var n = intOr(level, 0)
+  if (n <= 0) return "Transparency"
+  if (n >= 100) return "Noise Cancellation"
+  return String(n) + "%"
+}
+
 // The four AAP verbs, indexed by mode, in the order librepods-ctl accepts them.
 function noiseModeVerb(mode) {
   var verbs = ["noise:off", "noise:anc", "noise:transparency", "noise:adaptive"]
